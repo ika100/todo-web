@@ -4,30 +4,33 @@ shape: web-nextjs
 spec_hash: 3214ad138e78
 summary: Todo list page at / (show, add, toggle, delete) rendered server-side, mutations via Server Actions to todo-api
 tasks:
-  - id: t1
-    title: Shared todo types, messages and title validation
-    files: [app/_lib/todo.ts]
-    covers: [AC-001.7, AC-001.9, AC-001.10]
-    parallel_safe: true
-    depends_on: []
-  - id: t2
-    title: Server-only todo-api client and Server Actions
-    files: [app/_lib/todo-api.ts, app/actions.ts, docs/env-vars.md]
-    covers: [AC-001.5, AC-001.6, AC-001.7, AC-001.8, AC-001.9, AC-001.11, AC-001.12, AC-001.13, AC-001.14, AC-001.15, AC-001.16, AC-001.17, AC-001.18, AC-001.19, AC-001.20, AC-001.21, AC-001.22, AC-001.23, AC-001.25]
-    parallel_safe: true
-    depends_on: [t1]
-  - id: t3
-    title: TodoList client component with optimistic toggle and delete
-    files: [app/_components/todo-list.tsx, app/globals.css]
-    covers: [AC-001.3, AC-001.4, AC-001.5, AC-001.6, AC-001.7, AC-001.8, AC-001.9, AC-001.10, AC-001.11, AC-001.12, AC-001.13, AC-001.14, AC-001.15, AC-001.16, AC-001.18, AC-001.19, AC-001.20, AC-001.22, AC-001.24]
-    parallel_safe: true
-    depends_on: [t1]
-  - id: t4
-    title: Replace the landing page at / with the todo list page
-    files: [app/page.tsx, app/_components/feature-card.tsx, app/_components/icons.tsx, tests/page.test.tsx]
-    covers: [AC-001.1, AC-001.2, AC-001.3, AC-001.4, AC-001.17, AC-001.23, AC-001.25]
-    parallel_safe: false
-    depends_on: [t2, t3]
+- id: t1
+  title: Shared todo types, messages and title validation
+  files: [app/_lib/todo.ts]
+  covers: [AC-001.7, AC-001.9, AC-001.10]
+  parallel_safe: true
+  depends_on: []
+  done: true
+- id: t2
+  title: Server-only todo-api client and Server Actions
+  files: [app/_lib/todo-api.ts, app/actions.ts, docs/env-vars.md]
+  covers: [AC-001.5, AC-001.6, AC-001.7, AC-001.8, AC-001.9, AC-001.11, AC-001.12, AC-001.13, AC-001.14, AC-001.15, AC-001.16,
+    AC-001.17, AC-001.18, AC-001.19, AC-001.20, AC-001.21, AC-001.22, AC-001.23, AC-001.25]
+  parallel_safe: true
+  depends_on: [t1]
+- id: t3
+  title: TodoList client component with optimistic toggle and delete
+  files: [app/_components/todo-list.tsx, app/globals.css]
+  covers: [AC-001.3, AC-001.4, AC-001.5, AC-001.6, AC-001.7, AC-001.8, AC-001.9, AC-001.10, AC-001.11, AC-001.12, AC-001.13,
+    AC-001.14, AC-001.15, AC-001.16, AC-001.18, AC-001.19, AC-001.20, AC-001.22, AC-001.24]
+  parallel_safe: true
+  depends_on: [t1]
+- id: t4
+  title: Replace the landing page at / with the todo list page
+  files: [app/page.tsx, app/_components/feature-card.tsx, app/_components/icons.tsx, tests/page.test.tsx]
+  covers: [AC-001.1, AC-001.2, AC-001.3, AC-001.4, AC-001.17, AC-001.23, AC-001.25]
+  parallel_safe: false
+  depends_on: [t2, t3]
 ---
 
 # Plan — 001 Todo list page at /
