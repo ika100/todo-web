@@ -16,6 +16,7 @@
       "build":        "pnpm build",
       "test":         "pnpm test",
       "test-fast":    "pnpm test:fast",
+      "bundle-check": "bash scripts/bundle-check.sh",
       "spec-check":   "bash scripts/spec-check.sh",
       "lint":         "pnpm lint",
       "lint-fix":     "pnpm lint:fix",
