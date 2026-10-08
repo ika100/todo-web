@@ -1,7 +1,7 @@
 ---
 spec_id: 001-todo-list-page-at-show-add-toggle-delete
 title: Todo list page at / (show, add, toggle, delete todos) backed by todo-api
-status: draft
+status: approved
 priority: P1
 shape: web-nextjs
 parent: ika100/todo:001-todo-list
@@ -168,3 +168,4 @@ All requests to todo-api below are made by the todo-web server to the base URL i
 
 - 2026-10-08 created
 - 2026-10-08 amended: open question on responses the contract does not list answered (shown as unavailable, change not saved); confirms AC-001.22, no criteria added or withdrawn
+- 2026-10-08 approved
