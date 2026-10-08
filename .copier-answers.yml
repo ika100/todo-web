@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier; AVOID EDITING MANUALLY
+_src_path: gh:ika100/sdlc-foundry/templates/web-nextjs
+description: Web frontend for the todo app
+docker_registry: ghcr.io/ika100
+github_org: ika100
+needs_e2e: false
+needs_observability: true
+node_major: '24'
+owner_team: '@ika100'
+platform_marketplace_ref: main
+port: 3000
+project_name: todo-web

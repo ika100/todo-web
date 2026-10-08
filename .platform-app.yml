@@ -1,0 +1,3 @@
+# Application repos this service belongs to (read by /gitops:promote)
+gitops_apps:
+  - ika100/todo
