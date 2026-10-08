@@ -121,7 +121,7 @@ Deployed value `http://todo-api`, set in the todo gitops repo `services.yaml` (`
 
 ## Tests
 
-Acceptance tests are written before coding under `tests/` (Vitest + Testing Library, jsdom), mocking `globalThis.fetch` as a contract-following todo-api. They must not use the path `tests/page.test.tsx`: that is the template landing-page test, deleted by t4. AC-001.25's "value not in any browser file" check runs against the `.next/static` output of `devbox run build` with a sentinel `TODO_API_URL`.
+Acceptance tests are written before coding under `tests/` (Vitest + Testing Library, jsdom), mocking `globalThis.fetch` as a contract-following todo-api. They must not use the path `tests/page.test.tsx`: that is the template landing-page test, deleted by t4. AC-001.25's "value not in any browser file" check runs against the `.next/static` output of a build with a sentinel `TODO_API_URL` (`devbox run bundle-check`).
 
 ## Risks
 
