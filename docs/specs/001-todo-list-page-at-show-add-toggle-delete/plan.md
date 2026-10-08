@@ -18,6 +18,7 @@ tasks:
     AC-001.17, AC-001.18, AC-001.19, AC-001.20, AC-001.21, AC-001.22, AC-001.23, AC-001.25]
   parallel_safe: true
   depends_on: [t1]
+  done: true
 - id: t3
   title: TodoList client component with optimistic toggle and delete
   files: [app/_components/todo-list.tsx, app/globals.css]
