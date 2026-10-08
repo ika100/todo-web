@@ -162,8 +162,9 @@ All requests to todo-api below are made by the todo-web server to the base URL i
 
 ## Open questions
 
-- Confirm: an answer from todo-api the contract does not list for that endpoint (e.g. `422 invalid_request`, `400`) is shown as "Todos are unavailable, please try again" with the change not shown as saved. (suggested: yes; affects AC-001.22)
+- ~~Confirm: an answer from todo-api the contract does not list for that endpoint (e.g. `422 invalid_request`, `400`) is shown as "Todos are unavailable, please try again" with the change not shown as saved. (suggested: yes; affects AC-001.22)~~ Answered: yes, any response the contract does not list for that endpoint is shown as "Todos are unavailable, please try again" and the change is not shown as saved; see AC-001.22.
 
 ## Changelog
 
 - 2026-10-08 created
+- 2026-10-08 amended: open question on responses the contract does not list answered (shown as unavailable, change not saved); confirms AC-001.22, no criteria added or withdrawn
