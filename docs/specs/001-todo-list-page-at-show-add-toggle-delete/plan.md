@@ -26,6 +26,7 @@ tasks:
     AC-001.14, AC-001.15, AC-001.16, AC-001.18, AC-001.19, AC-001.20, AC-001.22, AC-001.24]
   parallel_safe: true
   depends_on: [t1]
+  done: true
 - id: t4
   title: Replace the landing page at / with the todo list page
   files: [app/page.tsx, app/_components/feature-card.tsx, app/_components/icons.tsx, tests/page.test.tsx]
