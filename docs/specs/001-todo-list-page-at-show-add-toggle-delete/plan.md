@@ -33,6 +33,7 @@ tasks:
   covers: [AC-001.1, AC-001.2, AC-001.3, AC-001.4, AC-001.17, AC-001.23, AC-001.25]
   parallel_safe: false
   depends_on: [t2, t3]
+  done: true
 ---
 
 # Plan — 001 Todo list page at /
