@@ -17,7 +17,6 @@
       "test":         "pnpm test",
       "test-fast":    "pnpm test:fast",
       "spec-check":   "bash scripts/spec-check.sh",
-      "bundle-check": "bash scripts/bundle-check.sh",
       "lint":         "pnpm lint",
       "lint-fix":     "pnpm lint:fix",
       "typecheck":    "pnpm typecheck",
