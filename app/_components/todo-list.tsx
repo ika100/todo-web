@@ -82,7 +82,7 @@ export function TodoList({ initialTodos, initialError, actions }: TodoListProps)
     const id = item.id;
     setMessage(null);
     setBusy(id, true);
-    let index = todos.findIndex((t) => t.id === id);
+    const index = todos.findIndex((t) => t.id === id);
     setTodos((prev) => prev.filter((t) => t.id !== id));
     const restore = () =>
       setTodos((prev) => {
@@ -107,7 +107,6 @@ export function TodoList({ initialTodos, initialError, actions }: TodoListProps)
       restore();
       setMessage("unavailable");
     } finally {
-      index = -1;
       setBusy(id, false);
     }
   }
