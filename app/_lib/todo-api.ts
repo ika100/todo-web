@@ -118,6 +118,21 @@ export async function updateTodoDone(id: string, done: boolean): Promise<ActionR
   return unavailable("update", res.status, "status");
 }
 
+export async function updateTodoTitle(id: string, title: string): Promise<ActionResult<Todo>> {
+  const sent = await send("update", "PATCH", `/todos/${encodeURIComponent(id)}`, { title });
+  if ("fail" in sent) return sent.fail;
+  const { res } = sent;
+  if (res.status === 200) return readTodo("update", res);
+  if (res.status === 422) {
+    const code = await errorCode(res);
+    if (code === "title_required" || code === "title_too_long") return { ok: false, error: code };
+  }
+  if (res.status === 404 && (await errorCode(res)) === "todo_not_found") {
+    return { ok: false, error: "not_found" };
+  }
+  return unavailable("update", res.status, "status");
+}
+
 export async function removeTodo(id: string): Promise<ActionResult<null>> {
   const sent = await send("delete", "DELETE", `/todos/${encodeURIComponent(id)}`);
   if ("fail" in sent) return sent.fail;
