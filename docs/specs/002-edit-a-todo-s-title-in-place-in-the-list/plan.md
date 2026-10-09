@@ -2,15 +2,16 @@
 spec_id: 002-edit-a-todo-s-title-in-place-in-the-list
 shape: web-nextjs
 spec_hash: 1f6563727fe4
-summary: Edit a todo's title in place (Edit, Save, Cancel, Enter/Escape, click outside cancels) via a setTodoTitle Server Action to PATCH /todos/{id}
+summary: Edit a todo's title in place (Edit, Save, Cancel, Enter/Escape, click outside cancels) via a setTodoTitle Server
+  Action to PATCH /todos/{id}
 tasks:
 - id: t1
   title: Title PATCH in the todo-api client, setTodoTitle Server Action and page wiring
   files: [app/_lib/todo.ts, app/_lib/todo-api.ts, app/actions.ts, app/page.tsx]
-  covers: [AC-002.4, AC-002.5, AC-002.11, AC-002.12, AC-002.13, AC-002.14, AC-002.15, AC-002.16, AC-002.17, AC-002.18,
-    AC-002.20]
+  covers: [AC-002.4, AC-002.5, AC-002.11, AC-002.12, AC-002.13, AC-002.14, AC-002.15, AC-002.16, AC-002.17, AC-002.18, AC-002.20]
   parallel_safe: true
   depends_on: []
+  done: true
 - id: t2
   title: In-place edit mode in TodoList (Edit, Save, Cancel, keyboard, outside press, focus)
   files: [app/_components/todo-list.tsx, app/globals.css]
