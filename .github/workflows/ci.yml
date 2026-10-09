@@ -229,3 +229,32 @@ jobs:
           # shellcheck disable=SC2046
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             $(printf 'ghcr.io/${{ github.repository }}@sha256:%s ' *)
+
+  pin-dev:
+    name: pin-dev (ask the gitops-app to pin dev to this build)
+    # Spec 062 / ADR-027: the gitops-app's pin-dev workflow opens a PR pinning dev to sha-<7> and merges it after CI.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: docker-publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Dispatch pin-dev to the gitops-app
+        env:
+          GH_TOKEN: ${{ secrets.GITOPS_TOKEN }}
+          SERVICE: ${{ github.event.repository.name }}
+        run: |
+          if [ ! -f .platform-app.yml ]; then
+            echo "::notice::no .platform-app.yml: dev is not pinned automatically (link the repo to its gitops-app with /shared:new-service --app, spec 062)"
+            exit 0
+          fi
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::notice::GITOPS_TOKEN is not set, so dev is not pinned automatically. Create a fine-grained token with Contents read and write on the gitops-app repo, then: gh secret set GITOPS_TOKEN -R $GITHUB_REPOSITORY (spec 062)"
+            exit 0
+          fi
+          tag="sha-${GITHUB_SHA::7}"
+          sed -n 's/^ *- *\([^ #]*\).*/\1/p' .platform-app.yml | while read -r app; do
+            gh api "repos/$app/dispatches" -f event_type=pin-dev -f "client_payload[service]=$SERVICE" -f "client_payload[tag]=$tag"
+            echo "asked $app to pin dev to $SERVICE:$tag"
+          done

@@ -16,7 +16,6 @@
       "build":        "pnpm build",
       "test":         "pnpm test",
       "test-fast":    "pnpm test:fast",
-      "bundle-check": "bash scripts/bundle-check.sh",
       "spec-check":   "bash scripts/spec-check.sh",
       "lint":         "pnpm lint",
       "lint-fix":     "pnpm lint:fix",
@@ -26,7 +25,8 @@
       "secrets-scan": "git ls-files -z ':!pnpm-lock.yaml' | xargs -0 detect-secrets-hook --baseline .secrets.baseline.json",
       "security":     "devbox run audit && devbox run secrets-scan",
       "image-build":  "docker build -t todo-web:scan .",
-      "image-scan":   "trivy image --severity CRITICAL,HIGH --format table todo-web:scan"
+      "image-scan":   "trivy image --severity CRITICAL,HIGH --format table todo-web:scan",
+      "bundle-check": "bash scripts/bundle-check.sh"
     }
   }
 }
