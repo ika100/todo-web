@@ -9,6 +9,7 @@ export type ActionResult<T> =
 export type TodoActions = {
   addTodo: (title: string) => Promise<ActionResult<Todo>>;
   setTodoDone: (id: string, done: boolean) => Promise<ActionResult<Todo>>;
+  setTodoTitle: (id: string, title: string) => Promise<ActionResult<Todo>>;
   deleteTodo: (id: string) => Promise<ActionResult<null>>;
 };
 

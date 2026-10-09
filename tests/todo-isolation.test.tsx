@@ -55,6 +55,7 @@ describe("no browser-side persistence and server-only API address", () => {
     const stub = {
       addTodo: vi.fn(async () => ({ ok: true as const, data: todo(9, { title: "New" }) })),
       setTodoDone: vi.fn(async () => ({ ok: true as const, data: todo(1, { title: "Task", done: true }) })),
+      setTodoTitle: vi.fn(async () => ({ ok: true as const, data: todo(1, { title: "Task" }) })),
       deleteTodo: vi.fn(async () => ({ ok: true as const, data: null })),
     };
     const { unmount } = render(<TodoList initialTodos={[todo(1, { title: "Task" })]} initialError={null} actions={stub} />);

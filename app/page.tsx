@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { TodoList } from "@/app/_components/todo-list";
-import { addTodo, deleteTodo, setTodoDone } from "@/app/actions";
+import { addTodo, deleteTodo, setTodoDone, setTodoTitle } from "@/app/actions";
 import { listTodos } from "@/app/_lib/todo-api";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ export default async function HomePage() {
     <TodoList
       initialTodos={initialTodos}
       initialError={initialError}
-      actions={{ addTodo, setTodoDone, deleteTodo }}
+      actions={{ addTodo, setTodoDone, setTodoTitle, deleteTodo }}
     />
   );
 }

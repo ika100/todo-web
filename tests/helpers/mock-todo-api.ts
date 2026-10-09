@@ -70,8 +70,22 @@ export function installMockTodoApi(initial: Todo[] = []) {
     }
     const found = state.todos.find((t) => t.id === id);
     if (path.startsWith("/todos/") && method === "PATCH") {
+      // Contract rules 1-8 of the extended PATCH /todos/{id} (title and/or done), in order.
+      const invalid = () => json(422, { error: { code: "invalid_request", message: "free text" } });
+      if (body === null || typeof body !== "object" || Array.isArray(body)) return invalid();
+      const b = body as Record<string, unknown>;
+      const hasTitle = "title" in b;
+      const hasDone = "done" in b;
+      if (!hasTitle && !hasDone) return invalid();
+      if (hasDone && typeof b.done !== "boolean") return invalid();
+      if (hasTitle && b.title === null) return json(422, { error: { code: "title_required", message: "Title is required" } });
+      if (hasTitle && typeof b.title !== "string") return invalid();
+      const newTitle = hasTitle ? (b.title as string).trim() : undefined;
+      if (newTitle !== undefined && newTitle.length === 0) return json(422, { error: { code: "title_required", message: "Title is required" } });
+      if (newTitle !== undefined && [...newTitle].length > 200) return json(422, { error: { code: "title_too_long", message: "Title must be at most 200 characters" } });
       if (!found) return json(404, { error: { code: "todo_not_found", message: "This todo no longer exists" } });
-      found.done = (body as { done: boolean }).done;
+      if (newTitle !== undefined) found.title = newTitle;
+      if (hasDone) found.done = b.done as boolean;
       return json(200, found);
     }
     if (path.startsWith("/todos/") && method === "DELETE") {
