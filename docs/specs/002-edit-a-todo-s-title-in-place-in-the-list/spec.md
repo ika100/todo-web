@@ -1,7 +1,7 @@
 ---
 spec_id: 002-edit-a-todo-s-title-in-place-in-the-list
 title: Edit a todo's title in place in the list (Edit, Save, Cancel, Enter/Escape, click outside cancels)
-status: building
+status: done
 priority: P1
 shape: web-nextjs
 parent: ika100/todo:002-update-a-notice
@@ -185,3 +185,4 @@ All requests to todo-api below are made by the todo-web server to the base URL i
 - 2026-10-08 amended: all six open questions answered. Added AC-002.22 (edit control accessible name "Edit <title>"), AC-002.23 (input named "Title", buttons "Save" and "Cancel"), AC-002.24 (a click outside that lands on another control cancels the edit and that control acts in the same click) and AC-002.25 (focus returns to the todo's edit control after a successful save); clarified AC-002.9 (no request for the edited todo); confirmed AC-002.8, AC-002.17, AC-002.18, AC-002.19 and AC-002.21 unchanged. Repo-level decision beyond the product contract (which only says "Edit"): the edit control's accessible name is "Edit <title>" (visible text stays "Edit"), the input's is "Title", and the buttons' are "Save" and "Cancel", matching spec 001's "Delete <title>".
 - 2026-10-08 approved
 - 2026-10-09 building
+- 2026-10-09 done
