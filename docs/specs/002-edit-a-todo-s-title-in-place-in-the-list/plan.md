@@ -20,6 +20,7 @@ tasks:
     AC-002.23, AC-002.24, AC-002.25]
   parallel_safe: false
   depends_on: [t1]
+  done: true
 ---
 
 # Plan — 002 Edit a todo's title in place in the list
