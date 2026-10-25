@@ -3,16 +3,8 @@ name: ci
 on:
   push:
     paths-ignore: ['**.md', 'docs/**', '.claude/**']
-    branches:
-      - main
-      - 'feature/**'
-      - 'fix/**'
-      - 'chore/**'
-      - 'docs/**'
-      - 'refactor/**'
-      - 'perf/**'
-      - 'test/**'
-      - 'release/**'
+    # other branches get CI from their PR only: a push trigger on them too ran every job twice (sdlc-foundry #104)
+    branches: [main]
     tags:
       - 'v*.*.*'
   pull_request:
@@ -36,10 +28,11 @@ concurrency:
 jobs:
   quality:
     name: quality (eslint + tsc)
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: jetify-com/devbox-install-action@8c6a66ed6273138b1915457069de78cb52fe3bd7 # v0.15.0
+        if: runner.environment == 'github-hosted'   # self-hosted runner images ship devbox (docs/self-hosted-runners.md)
         with:
           enable-cache: true
       - run: devbox run install
@@ -47,10 +40,11 @@ jobs:
 
   test:
     name: test (vitest + coverage)
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: jetify-com/devbox-install-action@8c6a66ed6273138b1915457069de78cb52fe3bd7 # v0.15.0
+        if: runner.environment == 'github-hosted'   # self-hosted runner images ship devbox (docs/self-hosted-runners.md)
         with:
           enable-cache: true
       - run: devbox run install
@@ -58,18 +52,42 @@ jobs:
 
   security:
     name: security (pnpm audit + detect-secrets)
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: jetify-com/devbox-install-action@8c6a66ed6273138b1915457069de78cb52fe3bd7 # v0.15.0
+        if: runner.environment == 'github-hosted'   # self-hosted runner images ship devbox (docs/self-hosted-runners.md)
         with:
           enable-cache: true
       - run: devbox run install
       - run: devbox run security
 
+  ci-extra:
+    name: ci-extra
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Is a ci-extra recipe defined?
+        id: recipe
+        run: |
+          if grep -qs '"ci-extra"[[:space:]]*:' devbox.json; then
+            echo "defined=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "defined=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::no ci-extra recipe is defined in devbox.json: nothing to run (spec 086)"
+          fi
+      - uses: jetify-com/devbox-install-action@8c6a66ed6273138b1915457069de78cb52fe3bd7 # v0.15.0
+        if: runner.environment == 'github-hosted' && steps.recipe.outputs.defined == 'true'   # self-hosted runner images ship devbox (docs/self-hosted-runners.md)
+        with:
+          enable-cache: true
+      - run: devbox run install
+        if: steps.recipe.outputs.defined == 'true'
+      - run: devbox run ci-extra
+        if: steps.recipe.outputs.defined == 'true'
+
   pr-title:
     name: pr-title (conventional commits)
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     if: github.event_name == 'pull_request'
     steps:
       - name: Validate PR title
@@ -87,7 +105,7 @@ jobs:
 
   branch-name:
     name: branch-name (naming convention)
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     if: github.event_name == 'pull_request'
     continue-on-error: true
     steps:
@@ -114,7 +132,8 @@ jobs:
       matrix:
         # Each architecture builds natively (no QEMU). Developers on Apple silicon run arm64 k3d/Docker nodes and cannot
         # pull an amd64-only image ("no match for platform in manifest"), so main/tags publish both; PR builds are amd64 only.
-        include: ${{ fromJSON(github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && '[{"arch":"amd64","runner":"ubuntu-latest"},{"arch":"arm64","runner":"ubuntu-24.04-arm"}]' || '[{"arch":"amd64","runner":"ubuntu-latest"}]') }}
+        # vars.CI_DOCKER_MATRIX (JSON, e.g. '[{"arch":"amd64","runner":"lan-myrepo"}]') replaces the matrix on self-hosted runners
+        include: ${{ fromJSON(vars.CI_DOCKER_MATRIX || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && '[{"arch":"amd64","runner":"ubuntu-latest"},{"arch":"arm64","runner":"ubuntu-24.04-arm"}]' || '[{"arch":"amd64","runner":"ubuntu-latest"}]')) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -134,8 +153,10 @@ jobs:
           context: .
           platforms: linux/${{ matrix.arch }}
           outputs: type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=${{ env.PUBLISH }}
-          cache-from: type=gha,scope=${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
+          # the GitHub Actions cache only on GitHub-hosted runners: on self-hosted ones exporting every layer over the
+          # site's uplink costs more than it saves (docs/self-hosted-runners.md)
+          cache-from: ${{ runner.environment == 'github-hosted' && format('type=gha,scope={0}', matrix.arch) || '' }}
+          cache-to: ${{ runner.environment == 'github-hosted' && format('type=gha,mode=max,scope={0}', matrix.arch) || '' }}
 
       - name: Scan the image for fixable HIGH/CRITICAL vulnerabilities
         if: env.PUBLISH == 'true'
@@ -191,7 +212,7 @@ jobs:
     name: docker (publish multi-arch manifest)
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     needs: docker
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     permissions:
       contents: read
       packages: write
@@ -213,6 +234,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+            type=sha,prefix=sha-,format=long
             type=sha,prefix=sha-,format=short
             type=raw,value=latest,enable={{is_default_branch}}
 
@@ -232,10 +254,10 @@ jobs:
 
   pin-dev:
     name: pin-dev (ask the gitops-app to pin dev to this build)
-    # Spec 062 / ADR-027: the gitops-app's pin-dev workflow opens a PR pinning dev to sha-<7> and merges it after CI.
+    # Spec 062 / ADR-027: the gitops-app's pin-dev workflow opens a PR pinning dev to sha-<40> and merges it after CI.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: docker-publish
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     permissions:
       contents: read
     steps:
@@ -250,10 +272,10 @@ jobs:
             exit 0
           fi
           if [ -z "$GH_TOKEN" ]; then
-            echo "::notice::GITOPS_TOKEN is not set, so dev is not pinned automatically. Create a fine-grained token with Contents read and write on the gitops-app repo, then: gh secret set GITOPS_TOKEN -R $GITHUB_REPOSITORY (spec 062)"
+            echo "::warning::GITOPS_TOKEN is not set, so dev is not pinned automatically. Create a fine-grained token with Contents read and write on the gitops-app repo, then: gh secret set GITOPS_TOKEN -R $GITHUB_REPOSITORY (spec 062)"
             exit 0
           fi
-          tag="sha-${GITHUB_SHA::7}"
+          tag="sha-${GITHUB_SHA}"   # spec 078: the full sha is the pin format
           sed -n 's/^ *- *\([^ #]*\).*/\1/p' .platform-app.yml | while read -r app; do
             gh api "repos/$app/dispatches" -f event_type=pin-dev -f "client_payload[service]=$SERVICE" -f "client_payload[tag]=$tag"
             echo "asked $app to pin dev to $SERVICE:$tag"
