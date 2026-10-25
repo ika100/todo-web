@@ -1,9 +1,9 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "detect-secrets@latest": {
-      "last_modified": "2026-08-27T07:16:00Z",
-      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#detect-secrets",
+    "detect-secrets@1.5.0": {
+      "last_modified": "2026-10-02T22:55:44Z",
+      "resolved": "github:NixOS/nixpkgs/55ba7f49ef2962b42cbd126522b7df5f95037679#detect-secrets",
       "source": "devbox-search",
       "version": "1.5.0",
       "systems": {
@@ -11,29 +11,29 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/nyw0474187yl5kl03hq8y0p00n187cn9-python3.14-detect-secrets-1.5.0",
+              "path": "/nix/store/b60k4jyj113a0d9d41yw483yahbvxm1g-python3.14-detect-secrets-1.5.0",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/5hx9i3pl9byl450sx2c3rmxh6y3whnka-python3.14-detect-secrets-1.5.0-dist"
+              "path": "/nix/store/5khqh6hc1kv528rygvsy7aq8c2r5sdlf-python3.14-detect-secrets-1.5.0-dist"
             }
           ],
-          "store_path": "/nix/store/nyw0474187yl5kl03hq8y0p00n187cn9-python3.14-detect-secrets-1.5.0"
+          "store_path": "/nix/store/b60k4jyj113a0d9d41yw483yahbvxm1g-python3.14-detect-secrets-1.5.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/n9zkj9vas9xznc1j5f7sl3pfs0fj4kw1-python3.14-detect-secrets-1.5.0",
+              "path": "/nix/store/70k2cx0v52sadh88jda19rnmiak363hr-python3.14-detect-secrets-1.5.0",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/l94g177qcfh44azmwwwgs8mfn7ki4py8-python3.14-detect-secrets-1.5.0-dist"
+              "path": "/nix/store/56bnpqkdygh05qxm9y05yrc5x9y7pisa-python3.14-detect-secrets-1.5.0-dist"
             }
           ],
-          "store_path": "/nix/store/n9zkj9vas9xznc1j5f7sl3pfs0fj4kw1-python3.14-detect-secrets-1.5.0"
+          "store_path": "/nix/store/70k2cx0v52sadh88jda19rnmiak363hr-python3.14-detect-secrets-1.5.0"
         },
         "x86_64-darwin": {
           "outputs": [
@@ -53,15 +53,15 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/a096glr5z43hnl5n94af98m1xn3xbfv3-python3.14-detect-secrets-1.5.0",
+              "path": "/nix/store/8yfilr4hmksvaifvd0j570jddqa5b4lc-python3.14-detect-secrets-1.5.0",
               "default": true
             },
             {
               "name": "dist",
-              "path": "/nix/store/l4mv3pimd38d0ngbhr6xil8ylf1f40x9-python3.14-detect-secrets-1.5.0-dist"
+              "path": "/nix/store/iyhikizgq2b0wcr584dh30lagnzmlkll-python3.14-detect-secrets-1.5.0-dist"
             }
           ],
-          "store_path": "/nix/store/a096glr5z43hnl5n94af98m1xn3xbfv3-python3.14-detect-secrets-1.5.0"
+          "store_path": "/nix/store/8yfilr4hmksvaifvd0j570jddqa5b4lc-python3.14-detect-secrets-1.5.0"
         }
       }
     },
@@ -284,9 +284,9 @@
         }
       }
     },
-    "trivy@latest": {
-      "last_modified": "2026-08-27T07:16:00Z",
-      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#trivy",
+    "trivy@0.74.0": {
+      "last_modified": "2026-10-02T22:55:44Z",
+      "resolved": "github:NixOS/nixpkgs/55ba7f49ef2962b42cbd126522b7df5f95037679#trivy",
       "source": "devbox-search",
       "version": "0.74.0",
       "systems": {
@@ -294,31 +294,31 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/x4wzkxdl9iq18cvxjqmgfk153pv8qda5-trivy-0.74.0",
+              "path": "/nix/store/1zixl9ybnw1yx8z6x1vqlrq6zj78iqvd-trivy-0.74.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/x4wzkxdl9iq18cvxjqmgfk153pv8qda5-trivy-0.74.0"
+          "store_path": "/nix/store/1zixl9ybnw1yx8z6x1vqlrq6zj78iqvd-trivy-0.74.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/7hdm6jdvfjqcffmhqhmnzfc1ddn0261n-trivy-0.74.0",
+              "path": "/nix/store/dzp5assvgirk78jrhrs5k55wm946kvn8-trivy-0.74.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/7hdm6jdvfjqcffmhqhmnzfc1ddn0261n-trivy-0.74.0"
+          "store_path": "/nix/store/dzp5assvgirk78jrhrs5k55wm946kvn8-trivy-0.74.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/y2bs43cy44ndnwx9aqd0z9hl9cchhpnp-trivy-0.74.0",
+              "path": "/nix/store/wzrkgajkwd4bw0mwxfy3pi878ixcqzy6-trivy-0.74.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/y2bs43cy44ndnwx9aqd0z9hl9cchhpnp-trivy-0.74.0"
+          "store_path": "/nix/store/wzrkgajkwd4bw0mwxfy3pi878ixcqzy6-trivy-0.74.0"
         }
       }
     }

@@ -32,9 +32,13 @@ Canonical `devbox run` scripts (configured in `devbox.json`):
 | `lint-fix` | `eslint . --fix` |
 | `typecheck` | `tsc --noEmit` |
 | `quality` | `lint` then `typecheck` — the gate CI runs |
+| `e2e` | Playwright tests in `e2e/` (installs Chromium; starts the app unless `SMOKE_BASE_URL` is set) |
+| `smoke` | the `@smoke` Playwright tests against a running deployment: `SMOKE_BASE_URL=https://<host> devbox run smoke` (`test` and `ci` never run them) |
 | `audit` | `pnpm audit --prod --audit-level high` |
 | `secrets-scan` | detect-secrets against `.secrets.baseline.json` |
 | `security` | `audit` + `secrets-scan` |
+| `secrets-baseline` | refresh `.secrets.baseline.json` with fixed flags (never run `detect-secrets scan` by hand) |
+| `ci` | `quality` + `test` + `security`: the gates CI runs, then `ci-extra` when your repo defines it; run it before every push |
 | `image-build` | Build local image `todo-web:scan` |
 | `image-scan` | trivy against `todo-web:scan` |
 
@@ -55,6 +59,7 @@ Agents and slash commands come from the [`ika100/sdlc-foundry`](https://github.c
 | Write a feature spec (first step) | `/svc:spec <description>` |
 | Plan the approved spec | `/svc:plan <NNN>` |
 | Build it: tests first, verified | `/svc:build <NNN>` |
+| All of it unattended: build, PR, merge on green CI, dev | `/svc:ship <NNN>` (headless: `cplat headless "/svc:ship <NNN>"`) |
 | Where specs stand | `/svc:specs` |
 | Small change | `/svc:quick-task <description>` |
 | Fix a bug | `/svc:fix-bug <description or error>` |
@@ -69,6 +74,18 @@ A feature starts with a spec, not code ([ADR-026](https://github.com/ika100/sdlc
 
 Branch prefixes: `feature/`, `fix/`, `chore/`, `docs/`, `refactor/`, `release/`. Slugs: lowercase, hyphens, ≤40 chars. Main is protected; all changes via PR. Required CI checks: `quality`, `test`, `security`, `pr-title`, `docker`. PR titles follow Conventional Commits (`type(scope): description ≤72 chars`).
 
+## Where your additions go
+
+Updates (`/shared:update-service`) overwrite the skeleton files below. Put your own work next to them, where an update keeps it:
+
+| Updates overwrite | Your additions go in |
+|---|---|
+| the template's recipes in `devbox.json` (including `ci`) | gates: the `ci-extra` recipe (`devbox run ci` and the `ci-extra` CI check run it); other tools: recipes of your own in `devbox.json` (kept) |
+| `.github/workflows/ci.yml` | a workflow file of your own in `.github/workflows/` |
+| `.claude/settings.json` | your own permission entries (allow, ask, deny) in it; they are kept |
+| `CLAUDE.md` | `.claude/project-notes.md` |
+| other skeleton files (Dockerfile, lint config ...) | nowhere: propose the change to the platform (`/shared:report-issue`) |
+
 ## Conventions
 
 - **App Router only.** Routes live in `app/`; Pages Router is not supported (ADR-004). Server Components by default; add `"use client"` only where needed.
@@ -76,7 +93,7 @@ Branch prefixes: `feature/`, `fix/`, `chore/`, `docs/`, `refactor/`, `release/`.
 - **Config:** read exclusively from environment variables (see `docs/env-vars.md`). Never expose secrets through `NEXT_PUBLIC_*`.
 - **Probes:** `/api/health` (liveness) and `/api/ready` (readiness) must keep responding.
 - **Observability:** `/api/metrics` (Prometheus), OpenTelemetry via `instrumentation.ts` when `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
-- **Tests:** Vitest + Testing Library in `tests/` (`*.test.ts[x]`).
+- **Tests:** Vitest + Testing Library in `tests/` (`*.test.ts[x]`); Playwright specs in `e2e/` (smoke tests carry `@smoke` in their title).
 - **Docs:** feature specs in `docs/specs/` (index in `docs/backlog.md`), ADRs in `docs/adr/`.
 
 ## Docker image pipeline
@@ -86,3 +103,9 @@ CI's `docker` job builds the multi-stage, non-root image on every run and pushes
 ## Deployment
 
 This repo ships **only a container image**. Kubernetes manifests, environment wiring (e.g. `API_URL`), replicas, resources and exposure belong to the product's `gitops-app` repo (platform ADR-017): register the service with `/gitops:compose add todo-web` (needs the GitHub topic `deployable-service`, set by `/shared:new-service`), then `/gitops:promote todo-web <from> <to>`. Change how the service runs by editing its entry in that repo's `services.yaml`; change the port, probe paths or user in the Dockerfile/app and update the entry to match.
+
+## Project notes
+
+Project-specific guidance for Claude Code goes in `.claude/project-notes.md`, which is loaded below and never changed by updates.
+
+@.claude/project-notes.md
